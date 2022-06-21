@@ -1,0 +1,49 @@
+---
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+
+# Getting started
+
+Before you can start using this library, you need
+to have a valid UI layout description file. Please
+refer to the [OARepo UI docs](https://oarepo.github.io/oarepo-ui/)
+for a guidance on how to create one.
+
+## What you'll need
+
+- A valid [layout definition](https://oarepo.github.io/oarepo-ui/docs/layout/configuration#layout-definition) file
+- [Node.js](https://nodejs.org/en/download/) version 14 or above:
+
+## Installation
+
+Add the React Generative UI library to your project
+
+<Tabs>
+ <TabItem value="npm" label="NPM" default>
+
+```bash
+npm install oarepo-generated-ui
+```
+
+ </TabItem>
+ <TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add oarepo-generated-ui
+```
+
+ </TabItem>
+ <TabItem value="invenio-cli" label="Invenio-CLI">
+
+To install the library for development on your Invenio repository instance
+
+```bash
+git clone https://github.com/oarepo/oarepo-generated-ui
+invenio-cli packages install ./oarepo-generated-ui
+```
+
+ </TabItem>
+</Tabs>
