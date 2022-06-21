@@ -26,42 +26,21 @@ generated_ui = WebpackThemeBundle(
     themes={
         "semantic-ui": dict(
             entry={
-                "invenio_search_ui_app": "./js/invenio_search_ui/app.js",
+                "oarepo_generated_layout": "./js/oarepo_generated_ui/layout.js",
             },
             dependencies={
                 "@babel/runtime": "^7.9.0",
                 "@semantic-ui-react/css-patch": "^1.0.0",
-                "axios": "^0.21.0",
                 "lodash": "^4.17.0",
-                "qs": "^6.8.0",
                 "react": "^16.13.0",
                 "react-dom": "^16.13.0",
-                "react-overridable": "^0.0.3",
-                "react-redux": "^7.2.0",
-                "redux": "^4.0.0",
-                "redux-thunk": "^2.3.0",
-                "react-searchkit": "^2.0.0",
-                "react-invenio-forms": "^0.10.0",
-                "semantic-ui-css": "^2.4.0",
-                "semantic-ui-react": "^2.1.0",
+                "semantic-ui-css": "^2.4.1",
+                "semantic-ui-react": "^2.1.2",
+                "clsx": "^1.1.1",
             },
             aliases={
-                '@js/invenio_search_ui': 'js/invenio_search_ui',
+                '@js/oarepo_generated_ui': 'js/oarepo_generated_ui',
             }
-        ),
-        "bootstrap3": dict(
-            entry={
-                "search_ui_app": "./js/invenio_search_ui/app.js",
-                "search_ui_theme": "./scss/invenio_search_ui/search.scss",
-            },
-            dependencies={
-                "almond": "~0.3.1",
-                "angular": "~1.4.10",
-                "angular-loading-bar": "~0.9.0",
-                "d3": "^3.5.17",
-                "invenio-search-js": "^1.3.1",
-                "jquery": "~3.2.1",
-            },
-        ),
+        )
     },
 )
