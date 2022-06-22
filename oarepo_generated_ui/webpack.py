@@ -40,6 +40,8 @@ generated_ui = WebpackThemeBundle(
             },
             aliases={
                 '@js/oarepo_generated_ui': 'js/oarepo_generated_ui',
+                # TODO: needed until resolution of https://github.com/inveniosoftware/invenio-search-ui/issues/130
+                '@translations/invenio_app_rdm': 'translations/oarepo_generated_ui'
             }
         )
     },
