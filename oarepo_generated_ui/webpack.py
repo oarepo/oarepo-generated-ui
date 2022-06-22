@@ -29,6 +29,9 @@ generated_ui = WebpackThemeBundle(
                 "oarepo_generated_layout": "./js/oarepo_generated_ui/layout.js",
             },
             dependencies={
+                "i18next": "^20.3.0",
+                "i18next-browser-languagedetector": "^6.1.0",
+                "react-i18next": "^11.11.0",
                 "@babel/runtime": "^7.9.0",
                 "@semantic-ui-react/css-patch": "^1.0.0",
                 "lodash": "^4.17.0",
