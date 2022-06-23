@@ -3,4 +3,6 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-export { createGeneratedLayout } from './util.tsx'
+import { createGeneratedLayout } from '.'
+
+createGeneratedLayout()
