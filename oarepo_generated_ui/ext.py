@@ -8,8 +8,6 @@
 
 """UI for Invenio-Search."""
 
-from . import config
-
 class OARepoGeneratedUI(object):
     """OARepo-Generated-UI extension."""
 
@@ -26,14 +24,4 @@ class OARepoGeneratedUI(object):
 
         :param app: The Flask application.
         """
-        self.init_config(app)
         app.extensions['oarepo-generated-ui'] = self
-
-    def init_config(self, app):
-        """Initialize configuration.
-
-        :param app: The Flask application.
-        """
-        for k in dir(config):
-            if k.startswith('OAREPO_GENERATED_UI_'):
-                app.config.setdefault(k, getattr(config, k))
