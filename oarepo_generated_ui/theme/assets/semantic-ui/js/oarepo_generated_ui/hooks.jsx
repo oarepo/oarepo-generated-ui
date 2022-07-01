@@ -50,20 +50,15 @@ export const useItems = (items, itemConfig = { component: 'raw' }) => {
   })
 }
 
-export const useSeparator = (separator) => {
+export const useSeparator = (separator, _data, _useGlobalData) => {
   if (!separator) {
     return {}
   }
-  return _isString(separator)
-    ? {
-        component: 'span',
-        children: separator,
-        className: 'oarepo-separator',
-      }
-    : {
-        ...separator,
-        className: clsx(separator.className, 'oarepo-separator'),
-      }
+  return _isString(separator) ? (
+    <React.Fragment>{separator}</React.Fragment>
+  ) : (
+    useLayout({ layout: separator, data: _data, useGlobalData: _useGlobalData })
+  )
 }
 
 export async function useComponent(
