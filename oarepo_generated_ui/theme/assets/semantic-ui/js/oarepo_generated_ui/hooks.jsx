@@ -67,13 +67,12 @@ export const useSeparator = (separator) => {
 }
 
 export async function useComponent(
-  componentName,
-  componentPackage = 'oarepo_ui',
+  _componentName = 'Span',
+  _componentPackage = 'oarepo_ui',
 ) {
-  const component = import(
-    `@js/${componentPackage}/components/${componentName}`
+  const component = await import(
+    /* webpackInclude: /ui_components\/.*\.jsx$/ */ `@uijs/${_componentPackage}/${_componentName}`
   )
-
   console.log(component)
   // const CachedComponent = React.memo(component() as React.FC<LayoutFragmentConfig>)
   // return { takesDataArray: false, Component: CachedComponent } as ComponentConfig

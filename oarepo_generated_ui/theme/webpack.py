@@ -38,6 +38,7 @@ generated_ui = WebpackThemeBundle(
             },
             aliases={
                 '@js/oarepo_generated_ui': 'js/oarepo_generated_ui',
+                '@uijs/oarepo_generated_ui': 'js/oarepo_generated_ui/ui_components'
             }
         )
     },

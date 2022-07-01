@@ -24,4 +24,6 @@ function GlobalDataContextProvider({ children, value }) {
   )
 }
 
+const GlobalDataContext = React.createContext(undefined)
+
 export { GlobalDataContext, GlobalDataContextProvider }
