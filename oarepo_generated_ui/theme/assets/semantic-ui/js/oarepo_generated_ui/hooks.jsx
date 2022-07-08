@@ -50,19 +50,19 @@ export const useItems = (items, itemConfig = { component: 'raw' }) => {
   })
 }
 
-export const useSeparator = (separator, _data, _useGlobalData) => {
+export const useSeparator = (separator, data, useGlobalData) => {
   if (!separator) {
     return {}
   }
   return _isString(separator) ? (
     <React.Fragment>{separator}</React.Fragment>
   ) : (
-    useLayout({ layout: separator, data: _data, useGlobalData: _useGlobalData })
+    useLayout({ layout: separator, data, useGlobalData })
   )
 }
 
 export async function useComponent(
-  _componentName = 'Span',
+  _componentName,
   _componentPackage = 'oarepo_ui',
 ) {
   const component = await import(
@@ -114,15 +114,17 @@ export function useLayout(renderProps) {
   }
 }
 
-export const useChildrenOrValue = (value, children) => {
+export const useChildrenOrValue = (children, data, useGlobalData) => {
   if (children) {
-    return children.map((child) => useLayout({ layout: child, data: value }))
-  } else if (_isString(value)) {
-    return <React.Fragment>{value}</React.Fragment>
+    return children.map((child) =>
+      useLayout({ layout: child, data, useGlobalData }),
+    )
+  } else if (_isString(data)) {
+    return <React.Fragment>{data}</React.Fragment>
   }
   return (
     <pre>
-      <code>JSON.stringify(value)</code>
+      <code>JSON.stringify(data)</code>
     </pre>
   )
 }

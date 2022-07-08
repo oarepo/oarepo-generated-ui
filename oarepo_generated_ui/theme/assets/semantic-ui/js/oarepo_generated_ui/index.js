@@ -4,4 +4,4 @@
 // https://opensource.org/licenses/MIT
 
 export { createGeneratedLayout } from './util'
-export { useLayout, useComponent } from './hooks'
+export { useLayout, useComponent, useChildrenOrValue } from './hooks'
