@@ -8,8 +8,8 @@ import _isString from 'lodash/isString'
 import _isArray from 'lodash/isArray'
 import _mapValues from 'lodash/mapValues'
 import React from 'react'
-import clsx from 'clsx'
 import { GlobalDataContext } from './context'
+import { SeparatorComponent } from './ui_components'
 
 /**
  * Uses data field configuration to query data
@@ -57,7 +57,7 @@ export const useSeparator = (separator, data, useGlobalData) => {
   return _isString(separator) ? (
     <React.Fragment>{separator}</React.Fragment>
   ) : (
-    useLayout({ layout: separator, data, useGlobalData })
+    <SeparatorComponent separator={separator} />
   )
 }
 
@@ -75,6 +75,7 @@ export async function useComponent(
 
 export function useLayout(renderProps) {
   const { layout, data = {}, useGlobalData = false } = renderProps
+  const globalData = useGlobalDataContext()
 
   const _renderLayout = async (_renderProps) => {
     const {
@@ -85,12 +86,13 @@ export function useLayout(renderProps) {
     } = _renderProps
     // const { takesDataArray = false, Component } = await useComponent(_layout.component)
 
-    const dataContext = _layout.data || useDataContext(_data, _layout.dataField)
+    const scopedData = useDataContext(_data, _layout.dataField)
+    const dataContext = _layout.data || scopedData
     const layoutData = _isArray(dataContext) ? dataContext : [dataContext]
     const layoutProps = {
       ..._layout,
       ...{ data: layoutData },
-      ...(_useGlobalData && { globalData: useGlobalDataContext() }),
+      ...(_useGlobalData && { globalData }),
       ...rest,
     }
 
@@ -106,7 +108,7 @@ export function useLayout(renderProps) {
         ...renderProps,
         ...{ layout: layoutItem },
         ...{ data: layoutItem.data || data },
-        ...(useGlobalData && { globalData: useGlobalDataContext() }),
+        ...(useGlobalData && { globalData }),
       }),
     )
   } else {
@@ -114,11 +116,14 @@ export function useLayout(renderProps) {
   }
 }
 
+const ChildComponent = ({ child, data, useGlobalData }) =>
+  useLayout({ layout: child, data, useGlobalData })
+
 export const useChildrenOrValue = (children, data, useGlobalData) => {
   if (children) {
-    return children.map((child) =>
-      useLayout({ layout: child, data, useGlobalData }),
-    )
+    return children.map((child) => (
+      <ChildComponent {...{ layout: child, data, useGlobalData }} />
+    ))
   } else if (_isString(data)) {
     return <React.Fragment>{data}</React.Fragment>
   }

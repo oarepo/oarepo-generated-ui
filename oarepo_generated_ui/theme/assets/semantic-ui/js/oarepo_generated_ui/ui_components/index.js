@@ -3,6 +3,6 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import GIcon from './GIcon'
+import SeparatorComponent from './SeparatorComponent'
 
-export { GIcon }
+export { SeparatorComponent }
