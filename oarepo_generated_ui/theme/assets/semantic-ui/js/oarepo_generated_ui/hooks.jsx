@@ -6,7 +6,6 @@
 import _get from 'lodash/get'
 import _isString from 'lodash/isString'
 import _isArray from 'lodash/isArray'
-import _mapValues from 'lodash/mapValues'
 import React from 'react'
 import { GlobalDataContext } from './context'
 import { SeparatorComponent } from './ui_components'
