@@ -4,6 +4,6 @@
 // https://opensource.org/licenses/MIT
 
 import SeparatorComponent from './SeparatorComponent'
-import DataArray from './DataArray'
+import withDataArray from './withDataArray'
 
-export { SeparatorComponent, DataArray }
+export { SeparatorComponent, withDataArray }
