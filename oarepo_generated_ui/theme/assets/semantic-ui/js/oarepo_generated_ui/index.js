@@ -5,3 +5,4 @@
 
 export { createGeneratedLayout } from './util'
 export { useLayout, useComponent, useChildrenOrValue } from './hooks'
+export { GlobalDataContextProvider } from './context'

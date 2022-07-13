@@ -6,7 +6,9 @@
 import _get from 'lodash/get'
 import _isString from 'lodash/isString'
 import _isArray from 'lodash/isArray'
-import React from 'react'
+import _camelCase from 'lodash/camelCase'
+import _upperFirst from 'lodash/upperFirst'
+import * as React from 'react'
 import { GlobalDataContext } from './context'
 import { SeparatorComponent } from './ui_components'
 
@@ -49,74 +51,83 @@ export const useItems = (items, itemConfig = { component: 'raw' }) => {
   })
 }
 
-export const useSeparator = (separator, data, useGlobalData) => {
+export const useSeparator = (separator) => {
+  console.debug('useSeparator', separator)
   if (!separator) {
     return {}
   }
   return _isString(separator) ? (
     <React.Fragment>{separator}</React.Fragment>
   ) : (
-    <SeparatorComponent separator={separator} />
+    useLayout({ layout: separator })
   )
 }
 
-export async function useComponent(
-  _componentName,
-  _componentPackage = 'oarepo_ui',
-) {
-  const component = await import(
-    /* webpackInclude: /ui_components\/.*\.jsx$/ */ `@uijs/${_componentPackage}/${_componentName}`
+export function useComponent(name, componentPackage = 'oarepo_ui') {
+  const componentName = _upperFirst(_camelCase(name))
+  const Component = React.lazy(() =>
+    import(
+      /* webpackInclude: /ui_components\/.*\.jsx$/ */ `@uijs/${componentPackage}/ui_components/${componentName}`
+    ),
   )
-  console.log(component)
-  // const CachedComponent = React.memo(component() as React.FC<LayoutFragmentConfig>)
-  // return { takesDataArray: false, Component: CachedComponent } as ComponentConfig
+  return { Component }
 }
 
-export function useLayout(renderProps) {
-  const { layout, data = {}, useGlobalData = false } = renderProps
-  const globalData = useGlobalDataContext()
+export function useLayout(layoutProps) {
+  const { layout, data = {}, useGlobalData = false, ...rest } = layoutProps
 
-  const _renderLayout = async (_renderProps) => {
+  function _renderLayout(renderProps) {
     const {
       layout: _layout,
       data: _data = {},
       useGlobalData: _useGlobalData = false,
       ...rest
-    } = _renderProps
-    // const { takesDataArray = false, Component } = await useComponent(_layout.component)
+    } = renderProps
+    console.debug('useLayout', renderProps)
+    const { Component } = useComponent(_layout.component)
 
     const scopedData = useDataContext(_data, _layout.dataField)
-    const dataContext = _layout.data || scopedData
-    const layoutData = _isArray(dataContext) ? dataContext : [dataContext]
-    const layoutProps = {
+    const dataContext = _layout.data || scopedData || {}
+    const renderData = _isArray(dataContext) ? dataContext : [dataContext]
+    console.debug('renderData', renderData)
+
+    const componentProps = {
       ..._layout,
-      ...{ data: layoutData },
-      ...(_useGlobalData && { globalData }),
+      data: renderData,
+      useGlobalData: _useGlobalData,
       ...rest,
     }
 
-    if (true) {
-      return <React.Fragment {...layoutProps} />
-    } else {
-    }
+    console.debug('componentProps', componentProps)
+    // if (takesArray) {
+    return (
+      <React.Suspense fallback={<React.Fragment />}>
+        <Component {...componentProps} />
+      </React.Suspense>
+    )
+    // } else {
+    // return renderData.map((d) => <Component {...componentProps} data={d} />)
+    // }
   }
 
   if (_isArray(layout)) {
     return layout.map((layoutItem) =>
       _renderLayout({
-        ...renderProps,
-        ...{ layout: layoutItem },
-        ...{ data: layoutItem.data || data },
-        ...(useGlobalData && { globalData }),
+        layout: layoutItem,
+        data: layoutItem.data || data,
+        useGlobalData,
+        ...rest,
       }),
     )
   } else {
-    return _renderLayout(renderProps)
+    const res = _renderLayout(layoutProps)
+    console.debug('renderLayout', res)
+    return res
   }
 }
 
-const ChildComponent = ({ child, data, useGlobalData }) =>
-  useLayout({ layout: child, data, useGlobalData })
+const ChildComponent = ({ layout, data, useGlobalData }) =>
+  useLayout({ layout, data, useGlobalData })
 
 export const useChildrenOrValue = (children, data, useGlobalData) => {
   if (children) {
@@ -128,7 +139,7 @@ export const useChildrenOrValue = (children, data, useGlobalData) => {
   }
   return (
     <pre>
-      <code>JSON.stringify(data)</code>
+      <code>{JSON.stringify(data)}</code>
     </pre>
   )
 }

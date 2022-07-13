@@ -11,10 +11,13 @@ import { useSeparator } from '../hooks'
  * An Icon, that renders either as a custom
  * SVG graphic or as a built-in Semantic-UI Icon.
  */
-const SeparatorComponent = ({ component }) => useSeparator(component)
+const SeparatorComponent = ({ component }) => {
+  console.log('separator', component)
+  return useSeparator(component)
+}
 
 SeparatorComponent.propTypes = {
-  component: PropTypes.any(PropTypes.string, PropTypes.object),
+  component: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 }
 
 export default SeparatorComponent
