@@ -15,23 +15,19 @@ include .tx/config
 include LICENSE
 include babel-js.ini
 include babel.ini
-include docs/requirements.txt
-include examples/requirements.txt
+exclude docs/requirements.txt
+exclude examples/requirements.txt
 include pytest.ini
-recursive-include .github/workflows *.yml
-recursive-include docs *.bat
-recursive-include docs *.py
-recursive-include docs *.rst
-recursive-include docs Makefile
-recursive-include examples *.py
-recursive-include examples *.sh
-recursive-include examples *.xml
-recursive-include examples/data *.json
-recursive-include invenio_search_ui *.html
-recursive-include invenio_search_ui *.js
-recursive-include invenio_search_ui *.mo
-recursive-include invenio_search_ui *.po
-recursive-include invenio_search_ui *.pot
-recursive-include invenio_search_ui *.scss
-recursive-include tests *.html
-recursive-include tests *.py
+recursive-exclude .github/workflows *.yml
+recursive-exclude .vscode *
+recursive-exclude examples *
+recursive-include oarepo_generated_ui *.html
+recursive-include oarepo_generated_ui *.js
+recursive-include oarepo_generated_ui *.mo
+recursive-include oarepo_generated_ui *.po
+recursive-include oarepo_generated_ui *.pot
+recursive-include oarepo_generated_ui *.scss
+recursive-exclude tests *
+recursive-exclude docs *
+recursive-include oarepo_generated_ui *.js
+recursive-include oarepo_generated_ui *.jsx
