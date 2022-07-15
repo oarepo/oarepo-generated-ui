@@ -10,7 +10,9 @@ import _isArray from 'lodash/isArray'
  */
 const withDataArray = (Component) => ({ data, useGlobalData, ...rest }) => {
   return _isArray(data) ? (
-    data.map((d) => <Component {...{ data: d, useGlobalData }} {...rest} />)
+    data.map((d, idx) => (
+      <Component key={idx} {...{ data: d, useGlobalData }} {...rest} />
+    ))
   ) : (
     <Component {...{ data, useGlobalData }} {...rest} />
   )

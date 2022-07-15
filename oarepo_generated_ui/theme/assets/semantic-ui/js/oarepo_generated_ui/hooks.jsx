@@ -6,11 +6,11 @@
 import _get from 'lodash/get'
 import _isString from 'lodash/isString'
 import _isArray from 'lodash/isArray'
+import _isObject from 'lodash/isObject'
 import _camelCase from 'lodash/camelCase'
 import _upperFirst from 'lodash/upperFirst'
 import * as React from 'react'
 import { GlobalDataContext } from './context'
-import { SeparatorComponent } from './ui_components'
 
 /**
  * Uses data field configuration to query data
@@ -22,12 +22,19 @@ import { SeparatorComponent } from './ui_components'
  * @returns `props` with values resolved from DataContext
  */
 export const useDataContext = (data, field) => {
-  if (_isString(field)) {
-    return _get(data, field, '')
-  } else if (field?.path || field?.default) {
-    return _get(data, field?.path || '', field?.default || '')
+  const _getContextData = (_data) => {
+    console.debug('useDataContext', data, field, _get(data, field))
+    if (_isString(field)) {
+      return _get(_data, field)
+    } else if (field?.path || field?.default) {
+      return _get(_data, field?.path, field?.default)
+    }
   }
-  return data
+
+  if (_isArray(data)) {
+    return data.map((d) => _getContextData(d, field))
+  }
+  return _getContextData(data, field)
 }
 
 export const useGlobalDataContext = () => {
@@ -74,45 +81,52 @@ export function useComponent(name, componentPackage = 'oarepo_ui') {
 }
 
 export function useLayout(layoutProps) {
-  const { layout, data = {}, useGlobalData = false, ...rest } = layoutProps
+  const { layout, data, useGlobalData = false, ...rest } = layoutProps
 
   function _renderLayout(renderProps) {
     const {
       layout: _layout,
-      data: _data = {},
+      data: _data,
       useGlobalData: _useGlobalData = false,
       ...rest
     } = renderProps
-    console.debug('useLayout', renderProps)
-    const { Component } = useComponent(_layout.component)
+    const {
+      component: layoutComponent,
+      data: layoutData,
+      dataField,
+      ...layoutProps
+    } = _layout
 
-    const scopedData = useDataContext(_data, _layout.dataField)
-    const dataContext = _layout.data || scopedData || {}
+    console.debug('useLayout', renderProps)
+    const { Component } = useComponent(layoutComponent)
+
+    const scopedData = dataField ? useDataContext(_data, dataField) : _data
+    const dataContext = layoutData || scopedData
     const renderData = _isArray(dataContext) ? dataContext : [dataContext]
-    console.debug('renderData', renderData)
+    console.debug('renderData', renderData, dataContext, scopedData, dataField)
 
     const componentProps = {
-      ..._layout,
+      ...layoutProps,
       data: renderData,
       useGlobalData: _useGlobalData,
       ...rest,
     }
 
     console.debug('componentProps', componentProps)
-    // if (takesArray) {
     return (
-      <React.Suspense fallback={<React.Fragment />}>
+      <React.Suspense
+        key={`sus-${layoutComponent}`}
+        fallback={<React.Fragment />}
+      >
         <Component {...componentProps} />
       </React.Suspense>
     )
-    // } else {
-    // return renderData.map((d) => <Component {...componentProps} data={d} />)
-    // }
   }
 
   if (_isArray(layout)) {
-    return layout.map((layoutItem) =>
+    return layout.map((layoutItem, idx) =>
       _renderLayout({
+        key: idx,
         layout: layoutItem,
         data: layoutItem.data || data,
         useGlobalData,
@@ -120,9 +134,7 @@ export function useLayout(layoutProps) {
       }),
     )
   } else {
-    const res = _renderLayout(layoutProps)
-    console.debug('renderLayout', res)
-    return res
+    return _renderLayout(layoutProps)
   }
 }
 
@@ -131,15 +143,21 @@ const ChildComponent = ({ layout, data, useGlobalData }) =>
 
 export const useChildrenOrValue = (children, data, useGlobalData) => {
   if (children) {
-    return children.map((child) => (
-      <ChildComponent {...{ layout: child, data, useGlobalData }} />
-    ))
+    if (_isArray(children)) {
+      return children.map((child) => (
+        <ChildComponent {...{ layout: child, data, useGlobalData }} />
+      ))
+    } else if (_isObject(children)) {
+      return <ChildComponent {...{ layout: children, data, useGlobalData }} />
+    }
+    return <React.Fragment>{children}</React.Fragment>
   } else if (_isString(data)) {
     return <React.Fragment>{data}</React.Fragment>
+  } else if (data) {
+    return (
+      <pre>
+        <code>{JSON.stringify(data)}</code>
+      </pre>
+    )
   }
-  return (
-    <pre>
-      <code>{JSON.stringify(data)}</code>
-    </pre>
-  )
 }
