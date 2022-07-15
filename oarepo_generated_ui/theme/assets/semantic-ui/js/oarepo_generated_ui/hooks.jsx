@@ -94,7 +94,7 @@ export function useLayout(layoutProps) {
       component: layoutComponent,
       data: layoutData,
       dataField,
-      ...layoutProps
+      ...restLayoutProps
     } = _layout
 
     console.debug('useLayout', renderProps)
@@ -106,7 +106,7 @@ export function useLayout(layoutProps) {
     console.debug('renderData', renderData, dataContext, scopedData, dataField)
 
     const componentProps = {
-      ...layoutProps,
+      ...restLayoutProps,
       data: renderData,
       useGlobalData: _useGlobalData,
       ...restRenderProps,

@@ -4,7 +4,6 @@
 // https://opensource.org/licenses/MIT
 
 import * as React from 'react'
-import _isArray from 'lodash/isArray'
 
 function createGeneratedLayout(
   _layout,
