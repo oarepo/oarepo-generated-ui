@@ -88,7 +88,7 @@ export function useLayout(layoutProps) {
       layout: _layout,
       data: _data,
       useGlobalData: _useGlobalData = false,
-      ...rest
+      ...restRenderProps
     } = renderProps
     const {
       component: layoutComponent,
@@ -109,7 +109,7 @@ export function useLayout(layoutProps) {
       ...layoutProps,
       data: renderData,
       useGlobalData: _useGlobalData,
-      ...rest,
+      ...restRenderProps,
     }
 
     console.debug('componentProps', componentProps)
