@@ -23,7 +23,6 @@ import { GlobalDataContext } from './context'
  */
 export const useDataContext = (data, field) => {
   const _getContextData = (_data) => {
-    console.debug('useDataContext', data, field, _get(data, field))
     if (_isString(field)) {
       return _get(_data, field)
     } else if (field?.path || field?.default) {
@@ -59,7 +58,6 @@ export const useItems = (items, itemConfig = { component: 'raw' }) => {
 }
 
 export const useSeparator = (separator) => {
-  console.debug('useSeparator', separator)
   if (!separator) {
     return {}
   }
@@ -97,13 +95,11 @@ export function useLayout(layoutProps) {
       ...restLayoutProps
     } = _layout
 
-    console.debug('useLayout', renderProps)
     const { Component } = useComponent(layoutComponent)
 
     const scopedData = dataField ? useDataContext(_data, dataField) : _data
     const dataContext = layoutData || scopedData
     const renderData = _isArray(dataContext) ? dataContext : [dataContext]
-    console.debug('renderData', renderData, dataContext, scopedData, dataField)
 
     const componentProps = {
       ...restLayoutProps,
@@ -111,8 +107,6 @@ export function useLayout(layoutProps) {
       useGlobalData: _useGlobalData,
       ...restRenderProps,
     }
-
-    console.debug('componentProps', componentProps)
     return (
       <React.Suspense
         key={`sus-${layoutComponent}`}
@@ -137,9 +131,6 @@ export function useLayout(layoutProps) {
     return _renderLayout(layoutProps)
   }
 }
-
-const ChildComponent = ({ layout, data, useGlobalData }) =>
-  useLayout({ layout, data, useGlobalData })
 
 export const useChildrenOrValue = (children, data, useGlobalData) => {
   if (children) {
