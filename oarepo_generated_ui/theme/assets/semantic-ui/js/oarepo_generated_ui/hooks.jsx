@@ -86,9 +86,14 @@ const LayoutComponent = ({
   useGlobalData,
   ...rest
 }) => {
-  const { component, data: layoutData, dataField, ...restLayoutProps } = layout
+  const {
+    component,
+    data: layoutData,
+    dataField: layoutDataField,
+    ...restLayoutProps
+  } = layout
   const { Component } = useComponent(component)
-  const scopedData = useDataContext(data, dataField)
+  const scopedData = useDataContext(data, layoutDataField || dataField)
 
   const dataContext = layout.data || dataField ? scopedData : data
   const renderData = _isArray(dataContext) ? dataContext : [dataContext]
