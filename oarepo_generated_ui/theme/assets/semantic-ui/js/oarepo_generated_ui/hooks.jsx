@@ -106,7 +106,7 @@ const LayoutComponent = ({
   }
 
   return (
-    <React.Suspense key={`sus-${componentName}`} fallback={<React.Fragment />}>
+    <React.Suspense key={`sus-${component}`} fallback={<React.Fragment />}>
       <Component {...componentProps} />
     </React.Suspense>
   )
