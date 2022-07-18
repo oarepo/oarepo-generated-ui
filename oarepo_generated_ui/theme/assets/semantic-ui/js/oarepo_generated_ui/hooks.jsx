@@ -61,10 +61,11 @@ export const useSeparator = (separator) => {
   if (!separator) {
     return {}
   }
+  const SeparatorLayout = useLayout({ layout: separator })
   return _isString(separator) ? (
     <React.Fragment>{separator}</React.Fragment>
   ) : (
-    useLayout({ layout: separator })
+    SeparatorLayout
   )
 }
 
@@ -78,59 +79,56 @@ export function useComponent(name, componentPackage = 'oarepo_ui') {
   return { Component }
 }
 
+const LayoutComponent = ({
+  layout,
+  data,
+  dataField,
+  useGlobalData,
+  ...rest
+}) => {
+  const { component, data: layoutData, dataField, ...restLayoutProps } = layout
+  const { Component } = useComponent(component)
+  const scopedData = useDataContext(data, dataField)
+
+  const dataContext = layout.data || dataField ? scopedData : data
+  const renderData = _isArray(dataContext) ? dataContext : [dataContext]
+
+  const componentProps = {
+    ...restLayoutProps,
+    data: renderData,
+    useGlobalData,
+    ...rest,
+  }
+
+  return (
+    <React.Suspense key={`sus-${componentName}`} fallback={<React.Fragment />}>
+      <Component {...componentProps} />
+    </React.Suspense>
+  )
+}
+
 export function useLayout(layoutProps) {
   const { layout, data, useGlobalData = false, ...rest } = layoutProps
 
-  function _renderLayout(renderProps) {
-    const {
-      layout: _layout,
-      data: _data,
-      useGlobalData: _useGlobalData = false,
-      ...restRenderProps
-    } = renderProps
-    const {
-      component: layoutComponent,
-      data: layoutData,
-      dataField,
-      ...restLayoutProps
-    } = _layout
-
-    const { Component } = useComponent(layoutComponent)
-
-    const scopedData = dataField ? useDataContext(_data, dataField) : _data
-    const dataContext = layoutData || scopedData
-    const renderData = _isArray(dataContext) ? dataContext : [dataContext]
-
-    const componentProps = {
-      ...restLayoutProps,
-      data: renderData,
-      useGlobalData: _useGlobalData,
-      ...restRenderProps,
-    }
-    return (
-      <React.Suspense
-        key={`sus-${layoutComponent}`}
-        fallback={<React.Fragment />}
-      >
-        <Component {...componentProps} />
-      </React.Suspense>
-    )
-  }
-
   if (_isArray(layout)) {
-    return layout.map((layoutItem, idx) =>
-      _renderLayout({
-        key: idx,
-        layout: layoutItem,
-        data: layoutItem.data || data,
-        useGlobalData,
-        ...rest,
-      }),
-    )
+    return layout.map((layoutItem, idx) => (
+      <LayoutComponent
+        {...{
+          key: idx,
+          layout: layoutItem,
+          data: layoutItem.data || data,
+          useGlobalData,
+          ...rest,
+        }}
+      />
+    ))
   } else {
-    return _renderLayout(layoutProps)
+    return <LayoutComponent {...layoutProps} />
   }
 }
+
+const ChildComponent = ({ layout, data, useGlobalData }) =>
+  useLayout({ layout, data, useGlobalData })
 
 export const useChildrenOrValue = (children, data, useGlobalData) => {
   if (children) {
