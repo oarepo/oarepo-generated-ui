@@ -57,15 +57,16 @@ export const useItems = (items, itemConfig = { component: 'raw' }) => {
   })
 }
 
+const SeparatorLayout = ({ layout }) => useLayout({ layout })
+
 export const useSeparator = (separator) => {
   if (!separator) {
     return {}
   }
-  const SeparatorLayout = useLayout({ layout: separator })
   return _isString(separator) ? (
     <React.Fragment>{separator}</React.Fragment>
   ) : (
-    SeparatorLayout
+    <SeparatorLayout layout={separator} />
   )
 }
 
@@ -95,9 +96,9 @@ const LayoutComponent = ({
   const { Component } = useComponent(component)
   const scopedData = useDataContext(data, layoutDataField || dataField)
 
-  const dataContext = layout.data || dataField ? scopedData : data
+  const dataContext =
+    layoutDataField || dataField ? scopedData : layoutData || data
   const renderData = _isArray(dataContext) ? dataContext : [dataContext]
-
   const componentProps = {
     ...restLayoutProps,
     data: renderData,
